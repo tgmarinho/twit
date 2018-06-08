@@ -3,6 +3,14 @@
 const User = use('App/Models/User')
 
 class UserController {
+  async me ({ auth }) {
+    const user = await auth.getUser()
+
+    await user.loadMany(['following', 'followers'])
+
+    return user
+  }
+
   async create ({ request }) {
     const data = request.only(['username', 'email', 'password'])
     const user = await User.create(data)
