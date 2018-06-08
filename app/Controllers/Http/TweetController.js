@@ -11,6 +11,17 @@ class TweetController {
 
     return tweet
   }
+
+  async destroy ({ request, auth }) {
+    const { id } = await auth.getUser()
+    const tweet = await Tweet.find(request.params.id)
+
+    if (tweet.user_id !== id) throw new Error("Can't delete tweet")
+
+    tweet.delete()
+
+    return tweet
+  }
 }
 
 module.exports = TweetController

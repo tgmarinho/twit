@@ -3,10 +3,15 @@
 const Route = use('Route')
 
 Route.post('/users', 'UserController.create').validator('CreateUser')
-Route.put('/users/:id', 'UserController.update')
-  .validator('UpdateUser')
-  .middleware(['auth'])
 
 Route.post('/sessions', 'SessionController.create').validator('CreateSession')
 
-Route.post('/tweets', 'TweetController.create').middleware(['auth'])
+/**
+ * Authenticated routes
+ */
+Route.group(() => {
+  Route.put('/users/:id', 'UserController.update').validator('UpdateUser')
+
+  Route.post('/tweets', 'TweetController.create')
+  Route.delete('/tweets/:id', 'TweetController.destroy')
+}).middleware(['auth'])
